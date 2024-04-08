@@ -4,9 +4,10 @@ import {JwtAuthStrategy} from "@/auth/jwt-auth.strategy";
 import {BooksResolverFactory} from "./books-resolver.factory";
 import {BooksRepository} from "./books.repository";
 
+
 export const booksRouter = Router()
 
-const {get, post, put, del} = new BooksResolverFactory(BooksRepository);
+const resolver = new BooksResolverFactory(BooksRepository);
 
 /**
 * @openapi
@@ -20,7 +21,7 @@ const {get, post, put, del} = new BooksResolverFactory(BooksRepository);
 *       '200':
 *           description: OK
 */
-booksRouter.get('/', get)
+booksRouter.get('/', resolver.get)
 
 /**
  * @openapi
@@ -58,7 +59,7 @@ booksRouter.get('/', get)
  *          description: Unauthorized
  */
 
-booksRouter.post('', authGuard(JwtAuthStrategy),  post)
+booksRouter.post('', authGuard(JwtAuthStrategy),  resolver.post)
 
 /**
  * @openapi
@@ -97,7 +98,7 @@ booksRouter.post('', authGuard(JwtAuthStrategy),  post)
  *       '401':
  *          description: Unauthorized
  */
-booksRouter.put('/:bookId', authGuard(JwtAuthStrategy),  put)
+booksRouter.put('/:bookId', authGuard(JwtAuthStrategy),  resolver.put)
 
 /**
  * @openapi
@@ -123,4 +124,4 @@ booksRouter.put('/:bookId', authGuard(JwtAuthStrategy),  put)
  *       '401':
  *          description: Unauthorized
  */
-booksRouter.delete('/:bookId', authGuard(JwtAuthStrategy), del);
+booksRouter.delete('/:bookId', authGuard(JwtAuthStrategy), resolver.del);

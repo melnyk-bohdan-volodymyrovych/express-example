@@ -9,6 +9,7 @@
     "sourceMap": true,
     "incremental": true,
     "paths": {
+      "@prisma/*": ["./node_modules/.prisma/*"],
       "@/*": [
         "./src/*"
       ]
@@ -18,5 +19,6 @@
   "lib": [
     "esnext",
     "dom",
+
   ]
 }

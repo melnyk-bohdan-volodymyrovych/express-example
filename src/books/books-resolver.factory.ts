@@ -17,12 +17,16 @@ export class BooksResolverFactory {
     }
 
     post({body}: Request, res: Response, next: NextFunction) {
-        res.send({id: 1, ...body})
+        return this.repository.create(body).then(book => res
+            .status(200).send({book}))
+            .catch(err => next(err));
     }
 
-    put(req: Request, res: Response, next: NextFunction) {
-        res.status(200).send({message: 'ok'})
+    put({body}: Request, res: Response, next: NextFunction) {
+        return this.repository.update(body).then(book => res
+            .status(200).send({book}))
+            .catch(err => next(err));
     }
 
-    del(req: Request, res: Response, next: NextFunction) {}
+    del({body}: Request, res: Response, next: NextFunction) {}
 }
