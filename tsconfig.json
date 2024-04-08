@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2017",
     "module": "commonjs",
     "outDir": "./dist",
     "baseUrl": ".",
@@ -9,15 +9,15 @@
     "sourceMap": true,
     "incremental": true,
     "paths": {
-      "@prisma/*": ["./node_modules/.prisma/*"],
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "@prisma": ["lib/db/prisma"]
     },
   },
   "exclude": [".data"],
   "lib": [
-    "esnext",
+    "es2017",
     "dom",
 
   ]

@@ -1,29 +1,39 @@
-import {PrismaClient} from "@prisma/client";
-
+import {Prisma, PrismaClient} from "@prisma/client";
+import {prisma} from "@/prisma/prisma.client";
 
 
 export class BooksRepository {
-    constructor() {}
-
+    constructor(private readonly client: PrismaClient = prisma) {
+        console.log(`[BooksRepository] loaded`);
+    }
 
     async findMany() {
-        const client = new PrismaClient();
-        const result = await client.book.findMany({});
-        await client.$disconnect()
+        const result = await this.client.book.findMany({where: {deletedAt: null}});
+        await this.client.$disconnect()
         return result;
     }
 
     async create({author, year, title}) {
-        const client = new PrismaClient();
-        const result = await client.book.create({data: {author, year, title}});
-        await client.$disconnect()
+        const result = await this.client.book.create({
+            data: {author, year, title}
+        });
         return result;
     }
 
-    async update({author, year, title}) {
-        const client = new PrismaClient();
-        const result = await client.book.update({data: {author, year, title}});
-        await client.$disconnect()
+    async update(bookId: number, {author, year, title}: Partial<Prisma.BookCreateInput>) {
+        const result = await this.client.book.update({
+            where: {id: bookId, deletedAt: null},
+            data: {author, year, title, updatedAt: new Date()}
+        });
+        return result;
+    }
+
+    async delete(bookId: number) {
+        const result = await this.client.book
+            .update({
+                where: {id: bookId, deletedAt: null},
+                data:{deletedAt: new Date()}
+            });
         return result;
     }
 }

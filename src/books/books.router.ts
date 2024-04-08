@@ -1,13 +1,13 @@
 import {Router} from "express";
 import {authGuard} from "@/auth";
 import {JwtAuthStrategy} from "@/auth/jwt-auth.strategy";
-import {BooksResolverFactory} from "./books-resolver.factory";
+import {BooksController} from "./books.controller";
 import {BooksRepository} from "./books.repository";
 
 
-export const booksRouter = Router()
+export const booksRouter = Router();
 
-const resolver = new BooksResolverFactory(BooksRepository);
+const resolver = new BooksController(BooksRepository);
 
 /**
 * @openapi
@@ -18,8 +18,10 @@ const resolver = new BooksResolverFactory(BooksRepository);
 *     summary:
 *       Returns a list of all the books.
 *     responses:
-*       '200':
+*        '200':
 *           description: OK
+*        '500':
+*           description: Internal server error
 */
 booksRouter.get('/', resolver.get)
 
@@ -55,8 +57,12 @@ booksRouter.get('/', resolver.get)
  *     responses:
  *       '201':
  *          description: Created
+ *       '400':
+ *          description: Bad request
  *       '401':
  *          description: Unauthorized
+ *       '500':
+ *          description: Internal server error
  */
 
 booksRouter.post('', authGuard(JwtAuthStrategy),  resolver.post)
@@ -72,6 +78,11 @@ booksRouter.post('', authGuard(JwtAuthStrategy),  resolver.post)
  *     summary:
  *       Update a book.
  *     parameters:
+ *       - name: bookId
+ *         description: Id of book to delete
+ *         in: path
+ *         required: true
+ *         type: number
  *       - name: author
  *         description: Author of the book.
  *         required: false
@@ -94,9 +105,13 @@ booksRouter.post('', authGuard(JwtAuthStrategy),  resolver.post)
  *       '200':
  *          description: Ok
  *       '204':
- *          description: No Content
+ *          description: Record to update not found.
+ *       '400':
+ *          description: Bad request
  *       '401':
  *          description: Unauthorized
+ *       '500':
+ *          description: Internal server error
  */
 booksRouter.put('/:bookId', authGuard(JwtAuthStrategy),  resolver.put)
 
@@ -120,8 +135,10 @@ booksRouter.put('/:bookId', authGuard(JwtAuthStrategy),  resolver.put)
  *       '200':
  *          description: Ok
  *       '204':
- *          description: No Content
+ *          description: Record to update not found
  *       '401':
  *          description: Unauthorized
+ *       '500':
+ *          description: Internal server error
  */
 booksRouter.delete('/:bookId', authGuard(JwtAuthStrategy), resolver.del);
