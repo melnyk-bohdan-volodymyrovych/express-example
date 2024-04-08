@@ -1,7 +1,7 @@
-import {sign, decode, JwtPayload} from 'jsonwebtoken';
+import {JsonWebTokenError, sign, verify} from 'jsonwebtoken';
 import {ConfigProvider} from "../config/config.provider";
 
-export class AuthStrategy {
+export class JwtAuthStrategy {
     constructor() {}
 
    createToken() {
@@ -14,7 +14,7 @@ export class AuthStrategy {
        );
    }
 
-   decode(token: string) {
-        return decode(token, )
+   async verify(token?: string) {
+        return verify(token, ConfigProvider.jwtSecret);
    }
 }
